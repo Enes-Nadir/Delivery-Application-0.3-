@@ -38,9 +38,14 @@ const CartScreen = () => {
     updateCart(itemId, Math.max(0, currentQuantity - 1));
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }) => {
+    const imageUrl = Array.isArray(item.image_url)
+    ? item.image_url[0] // Use the first image in the array
+    : item.image_url || 'https://via.placeholder.com/150'; // Fallback to a placeholder image
+  return (  
     <View style={styles.cartItem}>
-      <Image source={item.image} style={styles.itemImage} />
+      {/* Use firstImage for the image */}
+      <Image source={{ uri: imageUrl }} style={styles.itemImage} />
       <View style={styles.itemDetails}>
         <Text style={styles.itemTitle}>{item.name}</Text>
         <Text style={styles.price}>{`€${item.price * item.quantity}`}</Text>
@@ -55,8 +60,10 @@ const CartScreen = () => {
         </TouchableOpacity>
       </View>
     </View>
-  );
-
+    )
+  };
+  
+  
   return (
     <View style={styles.screen}>
       <Header title="Cart" />

@@ -1,16 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, Image, Dimensions, ScrollView, TouchableOpacity, Animated, StyleSheet, FlatList } from 'react-native';
+import { View, Text, Image, Dimensions, FlatList, Animated, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLOURS } from '../global/styles';
 import Header from '../components/Header';
 import { useCart } from '../navigation/CartContex';
 
 const { width } = Dimensions.get('window');
-
-const defaultImages = [
-  require('../assets/images/baked-fries.jpg'),
-  require('../assets/images/ice-kacang.jpg'),
-  require('../assets/images/kek-lapis.jpg'),
-];
 
 const Details = ({ route, navigation }) => {
   const { item, initialQuantity = 0 } = route.params;
@@ -20,9 +14,23 @@ const Details = ({ route, navigation }) => {
   const buttonOpacity = useRef(new Animated.Value(1)).current;
   const buttonColor = useRef(new Animated.Value(0)).current;
   const buttonPosition = useRef(new Animated.Value(0)).current;
-  const images = item.images && item.images.length > 0 ? item.images : defaultImages;
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
+
+
+
+  const images = (() => {
+    if (Array.isArray(item.image_url)) {
+      return item.image_url; // Already a valid array
+    }
+    try {
+      return JSON.parse(item.image_url); // Try to parse as JSON
+    } catch (error) {
+      console.error('Invalid JSON in image_url:', item.image_url, error);
+      return []; // Fallback to an empty array
+    }
+  })();
+  
 
   useEffect(() => {
     const cartItem = cartItems.find((cartItem) => cartItem.id === item.id);
@@ -67,11 +75,6 @@ const Details = ({ route, navigation }) => {
     outputRange: ['rgb(106, 27, 154)', 'red'],
   });
 
-  const handleScroll = (event) => {
-    const scrollPosition = event.nativeEvent.contentOffset.x;
-    setActiveIndex(Math.round(scrollPosition / width));
-  };
-
   const renderDotIndicators = () => {
     return images.map((_, index) => (
       <View
@@ -93,14 +96,16 @@ const Details = ({ route, navigation }) => {
       <View style={{ width, height: 300 }}>
         <FlatList
           data={images}
-          renderItem={({ item }) => <Image source={item} style={{ height: 300, width }} />}
+          renderItem={({ item }) => (
+            <Image source={{ uri: item }} style={{ height: 300, width }} />
+          )}
           keyExtractor={(item, index) => index.toString()}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           onScroll={Animated.event(
             [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-            { useNativeDriver: false, listener: handleScroll }
+            { useNativeDriver: false, listener: (event) => setActiveIndex(Math.round(event.nativeEvent.contentOffset.x / width)) }
           )}
         />
         <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20, marginBottom: 20 }}>
@@ -109,11 +114,11 @@ const Details = ({ route, navigation }) => {
       </View>
       <View style={{ paddingHorizontal: 20 }}>
         <Text style={{ fontSize: 24, fontWeight: 'bold', color: COLOURS.text }}>{item.name}</Text>
-        <Text style={{ fontSize: 28, fontWeight: 'bold', color: COLOURS.purple, marginBottom: 10 }}>{item.price} €</Text>
+        <Text style={{ fontSize: 28, fontWeight: 'bold', color: COLOURS.purple, marginBottom: 10 }}>€{item.price}</Text>
       </View>
       <View style={{ paddingHorizontal: 20, marginBottom: 10 }}>
         <Text style={{ fontSize: 16, marginVertical: 10, color: COLOURS.text }}>
-          Description about the product goes here...
+          {item.description || 'No description available.'}
         </Text>
       </View>
       <View style={styles.bottomButtonContainer}>
@@ -147,9 +152,12 @@ const Details = ({ route, navigation }) => {
           </View>
         )}
       </View>
+
     </View>
   );
 };
+
+
 
 const styles = StyleSheet.create({
   bottomButtonContainer: {

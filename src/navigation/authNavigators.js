@@ -7,9 +7,9 @@ import BottomTabs from './BottomTab';
 import Details from '../screens/Details';
 import CartScreen from '../screens/CartScreen';
 import AddressScreen from '../screens/Profile/AddressScreeen';
-import PaymentScreen from '../screens/Profile/CardField';
 import PrivacyPolicyScreen from '../screens/Profile/PrivacyPolicyScreen';
 import TermsOfServiceScreen from '../screens/Profile/TermsOfServiceScreen';
+import PaymentScreen from '../screens/Profile/PaymentScreen';
 
 
 const Auth = createStackNavigator();
@@ -60,14 +60,14 @@ export default function AuthStack(){
                     headerShown: false,
                 }}
             />
-            {/* <Auth.Screen 
+            <Auth.Screen 
                 name="PaymentScreen" 
                 component={PaymentScreen} 
                 options={{
                     title: 'Address',
                     headerShown: false,
                 }}
-            /> */}
+            />
             <Auth.Screen 
                 name="PrivacyPolicyScreen" 
                 component={PrivacyPolicyScreen} 

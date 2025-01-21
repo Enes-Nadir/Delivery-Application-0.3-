@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState  } from 'react';
 import { View, Text, Switch, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Avatar, Button, Icon } from 'react-native-elements';
 import { colors, COLOURS } from '../global/styles';
@@ -16,6 +16,14 @@ const ProfileScreen = ({ navigation }) => {
 //       Alert.alert(error.code);
 //     }
 //   };
+const [cardDetails, setCardDetails] = useState(null); // State for card details
+
+const handleAddEditCard = () => {
+  navigation.navigate('PaymentScreen', {
+    onSave: (details) => setCardDetails(details), // Callback to save card details
+  });
+};
+
 
   return (
     <View style={styles.container}>
@@ -54,13 +62,19 @@ const ProfileScreen = ({ navigation }) => {
         <Text style={styles.menuText}>Address</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.menuItem}
-        onPress={() => navigation.navigate('PaymentScreen')}
-      >
+      {/*  PAYMENT */}
+      <TouchableOpacity style={styles.menuItem} onPress={handleAddEditCard}>
         <Icon name="credit-card-outline" type="material-community" color={COLOURS.text} />
-        <Text style={styles.menuText}>Payment</Text>
+        <View style={styles.cardDetails}>
+          <Text style={styles.menuText}>
+            {cardDetails ? `Card Ending: ${cardDetails.last4}` : 'Add Payment Method'}
+          </Text>
+          <TouchableOpacity>
+            <Text style={styles.editButton}>Edit</Text>
+          </TouchableOpacity>
+        </View>
       </TouchableOpacity>
+
 
       <TouchableOpacity 
         style={styles.menuItem}
@@ -96,7 +110,7 @@ const ProfileScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+container: {
     flex: 1,
     backgroundColor: COLOURS.lightGray,
     paddingHorizontal: 20,
@@ -123,23 +137,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLOURS.text,
   },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 30,
-  },
-  stat: {
-    alignItems: 'center',
-  },
-  statNumber: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: COLOURS.text,
-  },
-  statLabel: {
-    fontSize: 14,
-    color: COLOURS.text,
-  },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -147,25 +144,27 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.grey5,
   },
-  menuText: {
+  cardDetails: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginLeft: 15,
+  },
+  menuText: {
     fontSize: 16,
     color: COLOURS.text,
   },
-  preferences: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 20,
-  },
-  darkThemeText: {
-    fontSize: 16,
-    color: colors.grey2,
+  editButton: {
+    color: colors.buttons,
     fontWeight: 'bold',
+    fontSize: 16,
+    marginRight: 20,
   },
   signOutButton: {
     backgroundColor: colors.buttons,
     marginTop: 20,
   },
+
 });
 
 export default ProfileScreen;
