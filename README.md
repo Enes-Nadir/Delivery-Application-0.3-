@@ -25,7 +25,7 @@ The **Delivery Application** is designed to provide a seamless food ordering exp
 ## 🖼 Screenshots
 
 ### **Home Screen**
-![Home Screen](./Delivery_Homescreen.png)
+![Home Screen](./DeliveryHomescreen.png)
 
 ### **Cart Screen**
 ![Cart Screen](./DeliveryCartscreen.png)
