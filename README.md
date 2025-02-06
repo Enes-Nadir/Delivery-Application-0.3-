@@ -24,11 +24,16 @@ The **Delivery Application** is designed to provide a seamless food ordering exp
 
 ## 🖼 Screenshots
 
---> **Home Screen**                                                                       
+### **Home Screen**   
+
 ![Home Screen](./DeliveryHomescreen.png) 
---> **Cart Screen**  
+
+### **Cart Screen**  
+
 ![Cart Screen](./DeliveryCartscreen.png)   
---> **Profile Screen**
+
+### **Profile Screen**
+
 ![Profile Screen](./DeliveryProfileScreen.png)
 
 
